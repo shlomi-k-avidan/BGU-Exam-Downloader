@@ -1,6 +1,6 @@
 # BGU Scanned-Exam Downloader (legacy student-era project)
 
-A small Windows utility I wrote during my B.Sc. at Ben-Gurion University (2023) to save myself and my classmates the daily ritual of checking the university's exam system ("Gezer") for newly scanned exams. It logs in with the student's own BGU credentials, lists the year's graded/scanned exams with grades color-coded in the terminal, and downloads the scanned exam PDFs automatically as they appear — including a batch mode (`*` = download everything) and background, threaded downloads that open each PDF when ready.
+A small Windows utility I wrote during my B.Sc. at Ben-Gurion University to save myself and my classmates the daily ritual of checking the university's exam system ("Gezer") for newly scanned exams. It logs in with the student's own BGU credentials, lists the year's graded/scanned exams with grades color-coded in the terminal, and downloads the scanned exam PDFs automatically as they appear — including a batch mode (`*` = download everything) and background, threaded downloads that open each PDF when ready.
 
 > **Status: historical.** The underlying system behavior described below was since fixed by the university, and the tool is kept here as a record of early work, not as a maintained project.
 
@@ -18,18 +18,21 @@ The university has since fixed this behavior. It was a good first lesson in the 
 
 ## Usage (historical, Windows)
 
-1. Install Python 3.
-2. Run the program (originally via the bundled `.bat` launcher): `python main.py`
+1. Install Python 3 and the dependencies: `pip install -r requirements.txt`
+2. Run `python main.py`
 3. Log in with your BGU credentials.
 4. Pick exams from the detected list, `*` for all, or `$` for fully manual entry.
 
-## Things I would not do today
+## 2026 cleanup
 
-Keeping the code as it was written is deliberate — it documents where I started:
+The code was professionally refactored before publication (type hints, a `Course` data model, BeautifulSoup parsing, `getpass` password input, structured error handling). Two original features were deliberately **removed** rather than modernized, because they shouldn't exist under anyone's name:
 
-- **Optional credential storage in base64** (with an in-program warning, at least). Base64 is encoding, not encryption. Today: OS keychain or don't store at all.
-- **Bare `except:` blocks everywhere**, global mutable state, and a dependency-check that tries to `pip install` standard-library modules (`time`, `base64`).
-- The tool is Windows-only, shells out to Firefox to open PDFs, and parses HTML with string replacement rather than a parser. It worked, it was used, and I've learned a lot since.
+- **Optional credential storage in base64** — base64 is encoding, not encryption. The original at least warned the user in-program; the correct answer is OS keychain or don't store at all, so storage is gone entirely.
+- **The self-modifying "remember my choice" hack** — the original rewrote its own source file to persist a preference. Cute at the time; unacceptable in hindsight.
+
+The original also carried bare `except:` blocks everywhere, a dependency check that tried to `pip install` standard-library modules (`time`, `base64`), and HTML parsing by string replacement. All fixed. The download-token reconstruction, threaded downloads, and terminal UI are preserved from the original.
+
+The original 2023 code is preserved exactly as written at the git tag [`legacy-2023-original`](../../tree/legacy-2023-original).
 
 ## Disclaimer
 
