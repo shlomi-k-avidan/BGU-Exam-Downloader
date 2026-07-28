@@ -3,8 +3,6 @@ welcome_str = '''\033[0m\033[s\033[1;33;40m
                         #                                                          #
                         #       *******************************************        #
                         #                                                          #
-                        #                      JOHNNY TEST                         #
-                        #                                                          #
                         #             /$$$$$$$  /$$$$$$$  /$$   /$$                #
                         #            | $$__  $$| $$____/ | $$  | $$                #
                         #            | $$  \ $$| $$      | $$  | $$                #
@@ -14,7 +12,7 @@ welcome_str = '''\033[0m\033[s\033[1;33;40m
                         #            | $$$$$$$/| $$$$$$$/|  $$$$$$/                #
                         #            |_______/ |_______/  \______/                 #
                         #                                                          #
-                        #                  GG EZ EXAM DOWNLOADER                   #
+                        #                   EZ EXAM DOWNLOADER                     #
                         #                                                          #
                         #       *******************************************        #
                         #                                                          #
@@ -175,8 +173,8 @@ def token_creator(s, il_id, course_id, moed, semester, year, site, download_page
     try:
         # Perform download
         bohan_parameter = int(semester) * (int(moed) != 11 and int(moed) != 4 and int(moed) != 3) + 4 * (int(moed) == 11 or int(moed) == 4 or int(moed) == 3)
-        token_str = token_template.format(xss_param=il_id, course_id=course_id, semester=semester, year=year, moed=moed, bohan_parameter=bohan_parameter)
-        filename = file_template.format(xss_param=il_id, course_id=course_id, moed=moed)
+        token_str = token_template.format(student_id=il_id, course_id=course_id, semester=semester, year=year, moed=moed, bohan_parameter=bohan_parameter)
+        filename = file_template.format(student_id=il_id, course_id=course_id, moed=moed)
         token = (base64.b64encode(token_str.encode('utf-8'))).decode('utf-8')
         data = {"toopen:2:1": "Download as PDF", "expars": token}
         print_notification("Using generated token {token}".format(token=token))
@@ -200,8 +198,8 @@ def main():
     pre_download_page = "tiflink.php"
     download_page = "exam.php"
     main_page = "main.php"
-    token_template = "{xss_param}:{year}:{semester}:0:{bohan_parameter}:{course_id}:1:{moed}"
-    file_template = "{xss_param}_{course_id}_{moed}.pdf"
+    token_template = "{student_id}:{year}:{semester}:0:{bohan_parameter}:{course_id}:1:{moed}"
+    file_template = "{student_id}_{course_id}_{moed}.pdf"
     agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41"
     exam_scanned_string = "appear after grades"
     bgu_creds_filename = "BGU_downloader.ini"
@@ -219,7 +217,7 @@ def main():
     # Gezer login
     s = requests.Session()
     while True:
-        # Credentials (Don't worry I won't sell them to the Chinese, only to the Koreans :D)
+        # Credentials (Don't worry I won't sell them :D)
         username, password, il_id = "","", ""
         if not os.path.isfile(bgu_creds_filename) or never_ask_again:
             auto_login_answer = False
